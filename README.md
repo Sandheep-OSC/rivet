@@ -64,9 +64,45 @@ The project includes a `Justfile` with convenient commands:
   just js-run react-dummy
   ```
 
+- **Run multiple React apps in parallel:**
+  ```bash
+  just js-run-apps "react-dummy another-app"
+  ```
+
 - **Run a Rust package:**
   ```bash
   just rust-run rust-core
+  ```
+
+### App Management
+
+- **Install packages for a specific JS app:**
+  ```bash
+  just js-install-app react-dummy
+  ```
+
+- **Create a new JS app:**
+  ```bash
+  # Create in apps/ directory (default)
+  just js-create-app my-new-app
+  
+  # Create in packages/ directory
+  just js-create-app my-new-app dir=packages
+  
+  # Create in nested directory
+  just js-create-app my-new-app dir=apps/engine/frontend
+  ```
+
+- **Create a new Rust crate:**
+  ```bash
+  # Create in packages/ directory (default)
+  just rust-create-app my-rust-crate
+  
+  # Create in apps/ directory
+  just rust-create-app my-rust-crate dir=apps
+  
+  # Create in nested directory (automatically adds to workspace)
+  just rust-create-app my-rust-crate dir=apps/engine/crates/storage
   ```
 
 ### Manual Commands

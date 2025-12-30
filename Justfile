@@ -37,16 +37,29 @@ js-run-apps apps:
 # Create a new JS app
 js-create-app name dir="apps":
     #!/usr/bin/env bash
-    if [ "{{dir}}" != "apps" ] && [ "{{dir}}" != "packages" ]; then
-        echo "Error: Directory must be 'apps' or 'packages'"
-        exit 1
+    # Parse dir argument (handle both "dir=value" and "value" formats)
+    DIR="{{dir}}"
+    if [[ "$$DIR" == dir=* ]]; then
+        DIR="$${DIR#dir=}"
     fi
-    APP_DIR="{{dir}}/{{name}}"
+    
+    case "$$DIR" in
+        apps|apps/*|packages|packages/*)
+            # Valid directory
+            ;;
+        *)
+            echo "Error: Directory must start with 'apps' or 'packages'"
+            echo "Received: '$$DIR'"
+            exit 1
+            ;;
+    esac
+    APP_DIR="$$DIR/{{name}}"
     if [ -d "$$APP_DIR" ]; then
-        echo "Error: App '{{name}}' already exists in {{dir}}!"
+        echo "Error: App '{{name}}' already exists in $$DIR!"
         exit 1
     fi
-    cd {{dir}} && pnpm create vite {{name}}
+    mkdir -p "$$DIR"
+    cd "$$DIR" && pnpm create vite {{name}}
 
 # ---------------------
 # Rust
@@ -64,24 +77,42 @@ rust-run app:
 # Create a new Rust app
 rust-create-app name dir="packages":
     #!/usr/bin/env bash
-    if [ "{{dir}}" != "apps" ] && [ "{{dir}}" != "packages" ]; then
-        echo "Error: Directory must be 'apps' or 'packages'"
+    set -euo pipefail
+
+    DIR="{{dir}}"
+
+    # Strip optional "dir=" prefix
+    if [[ "$DIR" == dir=* ]]; then
+        DIR="${DIR#dir=}"
+    fi
+
+    case "$DIR" in
+        apps|apps/*|packages|packages/*)
+            ;;
+        *)
+            echo "Error: Directory must start with 'apps' or 'packages'"
+            echo "Received: '$DIR'"
+            exit 1
+            ;;
+    esac
+
+    APP_DIR="$DIR/{{name}}"
+    echo "Creating Rust crate at: $APP_DIR"
+
+    if [ -d "$APP_DIR" ]; then
+        echo "Error: App '{{name}}' already exists at $APP_DIR"
         exit 1
     fi
-    APP_DIR="{{dir}}/{{name}}"
-    if [ -d "$$APP_DIR" ]; then
-        echo "Error: App '{{name}}' already exists in {{dir}}!"
-        exit 1
-    fi
-    cargo new --lib {{dir}}/{{name}}
-    # Add to workspace members in Cargo.toml
-    WORKSPACE_PATH="{{dir}}/{{name}}"
-    if ! grep -q "\"$$WORKSPACE_PATH\"" Cargo.toml; then
-        # Add the new member before the closing bracket
-        sed -i 's|\(members = \[.*\)\]|\1]|' Cargo.toml
-        echo "Added $WORKSPACE_PATH to workspace members in Cargo.toml"
+
+    mkdir -p "$DIR"
+    cargo new "$APP_DIR"
+
+    if ! grep -q "\"$APP_DIR\"" Cargo.toml; then
+        sed -i.bak "/members = \[/a\\
+        \"$APP_DIR\"," Cargo.toml
+        echo "Added $APP_DIR to workspace members in Cargo.toml"
     else
-        echo "$WORKSPACE_PATH already exists in workspace members"
+        echo "$APP_DIR already exists in workspace members"
     fi
 
 # ---------------------
