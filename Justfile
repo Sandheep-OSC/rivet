@@ -37,29 +37,35 @@ js-run-apps apps:
 # Create a new JS app
 js-create-app name dir="apps":
     #!/usr/bin/env bash
-    # Parse dir argument (handle both "dir=value" and "value" formats)
+    set -euo pipefail
+
     DIR="{{dir}}"
-    if [[ "$$DIR" == dir=* ]]; then
-        DIR="$${DIR#dir=}"
+
+    # Strip optional "dir=" prefix
+    if [[ "$DIR" == dir=* ]]; then
+        DIR="${DIR#dir=}"
     fi
-    
-    case "$$DIR" in
+
+    case "$DIR" in
         apps|apps/*|packages|packages/*)
-            # Valid directory
             ;;
         *)
             echo "Error: Directory must start with 'apps' or 'packages'"
-            echo "Received: '$$DIR'"
+            echo "Received: '$DIR'"
             exit 1
             ;;
     esac
-    APP_DIR="$$DIR/{{name}}"
-    if [ -d "$$APP_DIR" ]; then
-        echo "Error: App '{{name}}' already exists in $$DIR!"
+
+    APP_DIR="$DIR/{{name}}"
+
+    if [ -d "$APP_DIR" ]; then
+        echo "Error: App '{{name}}' already exists in $DIR!"
         exit 1
     fi
-    mkdir -p "$$DIR"
-    cd "$$DIR" && pnpm create vite {{name}}
+
+    mkdir -p "$DIR"
+    cd "$DIR"
+    pnpm create vite {{name}}
 
 # ---------------------
 # Rust

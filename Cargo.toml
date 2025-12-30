@@ -1,4 +1,11 @@
 [workspace]
-members = ["packages/rust-core"]
+members = [
+  "apps/engine/bin/forge",
+  "apps/engine/crates/api",
+  "apps/engine/crates/engine-core",
+  "apps/engine/crates/executor",
+  "apps/engine/crates/schedular",
+  "apps/engine/crates/storage",
+]
 
 resolver = "3"

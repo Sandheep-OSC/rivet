@@ -8,7 +8,7 @@ importers:
 
   .: {}
 
-  apps/react-dummy:
+  packages/dummy-lib:
     dependencies:
       react:
         specifier: ^19.2.0

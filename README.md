@@ -76,7 +76,11 @@ The project includes a `Justfile` with convenient commands:
 
 ### App Management
 
-- **Install packages for a specific JS app:**
+The Justfile includes commands to streamline app creation and package management in the monorepo.
+
+#### JavaScript/TypeScript Apps
+
+- **Install packages for a specific app:**
   ```bash
   just js-install-app react-dummy
   ```
@@ -92,6 +96,10 @@ The project includes a `Justfile` with convenient commands:
   # Create in nested directory
   just js-create-app my-new-app dir=apps/engine/frontend
   ```
+  
+  This uses `pnpm create vite` to scaffold a new React + TypeScript application.
+
+#### Rust Crates
 
 - **Create a new Rust crate:**
   ```bash
@@ -104,6 +112,8 @@ The project includes a `Justfile` with convenient commands:
   # Create in nested directory (automatically adds to workspace)
   just rust-create-app my-rust-crate dir=apps/engine/crates/storage
   ```
+  
+  **Note:** New Rust crates are automatically added to the `Cargo.toml` workspace members, so they're immediately available for building and testing.
 
 ### Manual Commands
 
@@ -145,6 +155,21 @@ The project includes a `Justfile` with convenient commands:
   ```bash
   cargo test
   ```
+
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| List all commands | `just` |
+| Build everything | `just build` |
+| Run tests | `just test` |
+| Run JS app | `just js-run <app-name>` |
+| Run multiple JS apps | `just js-run-apps "app1 app2"` |
+| Run Rust crate | `just rust-run <crate-name>` |
+| Create JS app | `just js-create-app <name> [dir=path]` |
+| Create Rust crate | `just rust-create-app <name> [dir=path]` |
+| Install JS deps (app) | `just js-install-app <app-name>` |
+| Clean build artifacts | `just clean` |
 
 ## Clean
 
