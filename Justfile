@@ -81,12 +81,12 @@ rust-run app:
     cargo run -p {{app}}
 
 # Add a dependency to a specific Rust crate
-rust-add-dependency crate package:
-    cargo add --package {{crate}} {{package}}
+rust-add-dependency crate package *flags:
+    cargo add --package {{crate}} {{package}} {{flags}}
 
 # Add a dev dependency to a specific Rust crate
-rust-add-dev-dependency crate package:
-    cargo add --package {{crate}} --dev {{package}}
+rust-add-dev-dependency crate package *flags:
+    cargo add --package {{crate}} --dev {{package}} {{flags}}
 
 # Create a new Rust app
 rust-create-app name dir="packages":
