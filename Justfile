@@ -80,6 +80,14 @@ rust-test:
 rust-run app:
     cargo run -p {{app}}
 
+# Add a dependency to a specific Rust crate
+rust-add-dependency crate package:
+    cargo add --package {{crate}} {{package}}
+
+# Add a dev dependency to a specific Rust crate
+rust-add-dev-dependency crate package:
+    cargo add --package {{crate}} --dev {{package}}
+
 # Create a new Rust app
 rust-create-app name dir="packages":
     #!/usr/bin/env bash

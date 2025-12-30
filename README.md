@@ -115,6 +115,17 @@ The Justfile includes commands to streamline app creation and package management
   
   **Note:** New Rust crates are automatically added to the `Cargo.toml` workspace members, so they're immediately available for building and testing.
 
+- **Add a dependency to a specific Rust crate:**
+  ```bash
+  # Add a regular dependency
+  just rust-add-dependency rust-core serde
+  
+  # Add a dev dependency
+  just rust-add-dev-dependency rust-core tokio-test
+  ```
+  
+  This uses `cargo add` to add dependencies to the specified crate's `Cargo.toml`.
+
 ### Manual Commands
 
 #### JavaScript/TypeScript
@@ -169,6 +180,8 @@ The Justfile includes commands to streamline app creation and package management
 | Create JS app | `just js-create-app <name> [dir=path]` |
 | Create Rust crate | `just rust-create-app <name> [dir=path]` |
 | Install JS deps (app) | `just js-install-app <app-name>` |
+| Add Rust dependency | `just rust-add-dependency <crate> <package>` |
+| Add Rust dev dependency | `just rust-add-dev-dependency <crate> <package>` |
 | Clean build artifacts | `just clean` |
 
 ## Clean
