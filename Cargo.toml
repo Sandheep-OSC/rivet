@@ -6,6 +6,7 @@ members = [
   "apps/engine/crates/executor",
   "apps/engine/crates/schedular",
   "apps/engine/crates/storage",
+  "apps/engine/crates/storage-migrations",
   "packages/contracts-rust",
 ]
 
