@@ -84,6 +84,9 @@ js-create-app name dir="apps":
 # Rust
 # ---------------------
 
+rust-run-migration:
+  cargo run -p storage-migrations
+
 rust-build:
     cargo build
 

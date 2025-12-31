@@ -2325,6 +2325,8 @@ dependencies = [
 name = "storage-migrations"
 version = "0.1.0"
 dependencies = [
+ "engine-core",
+ "sea-orm",
  "sea-orm-migration",
  "tokio",
 ]
