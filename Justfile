@@ -1,6 +1,19 @@
 set dotenv-load := true
 set shell := ["bash", "-cu"]
 
+# ---------------------
+# Global variables
+# ---------------------
+
+# Rust crate that generates TS types
+RUST_BINDINGS_CRATE := "packages/contracts-rust"
+
+# Directory to store generated TS types
+GENERATED_TS_DIR := "packages/dummy-lib/src"
+
+
+
+
 default:
     just --list
 
@@ -144,3 +157,50 @@ test:
 clean:
     rm -rf node_modules
     cargo clean
+
+
+# Generate TS types from Rust crates using ts-rs
+# ---------------------
+# TS-RS / TypeScript bindings
+# ---------------------
+
+rust-generate-types:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "Generating TS types from {{RUST_BINDINGS_CRATE}}..."
+    cargo test -p contracts-rust export_bindings
+
+    echo "Clearing old TS types in {{GENERATED_TS_DIR}}..."
+    rm -rf "{{GENERATED_TS_DIR}}"/*
+    mkdir -p "{{GENERATED_TS_DIR}}"
+
+    echo "Copying newly generated TS types..."
+    cp -r "{{RUST_BINDINGS_CRATE}}/bindings/"* "{{GENERATED_TS_DIR}}/"
+
+    echo "TS types generated and copied successfully."
+
+# Build JS projects after generating types
+js-build-with-types: rust-generate-types
+    just js-build
+
+# Test JS projects after generating types
+js-test-with-types: rust-generate-types
+    just js-test
+
+# Full workflow: generate types, build Rust + JS
+build-all: rust-generate-types
+    just build
+
+# Full workflow: generate types, test Rust + JS
+test-all: rust-generate-types
+    just test
+
+# Optional: watch Rust crate for changes and regenerate types automatically
+rust-watch-types:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "Watching {{RUST_BINDINGS_CRATE}}/src for changes..."
+    cargo watch -w "{{RUST_BINDINGS_CRATE}}/src" -x "test -p contracts-rust export_bindings" \
+        -s "rm -rf {{GENERATED_TS_DIR}}/* && cp -r {{RUST_BINDINGS_CRATE}}/bindings/* {{GENERATED_TS_DIR}}/ && echo 'TS types updated!'"

@@ -1,5 +1,8 @@
 use engine_core::types::job_status::JobStatus;
+use ts_rs::TS;
 
+#[derive(TS)]
+#[ts(export)]
 pub enum JobStatusDTO {
     Pending,
     Running,
