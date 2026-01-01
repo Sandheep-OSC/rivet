@@ -4,12 +4,16 @@ pub mod identifiers;
 pub mod migrations;
 
 use migrations::m0001_create_job_defination;
+use migrations::m0002_create_job_step;
 
 pub struct Migrator;
 
 #[async_trait::async_trait]
 impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
-        vec![Box::new(m0001_create_job_defination::Migration)]
+        vec![
+            Box::new(m0001_create_job_defination::Migration),
+            Box::new(m0002_create_job_step::Migration),
+        ]
     }
 }
