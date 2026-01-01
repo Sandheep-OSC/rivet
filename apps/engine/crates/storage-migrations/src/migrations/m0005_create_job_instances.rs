@@ -1,6 +1,6 @@
 use sea_orm_migration::prelude::*;
 
-use crate::identifiers::job_instances::JobInstance;
+use crate::identifiers::{job_defination::JobDefination, job_instances::JobInstance};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -25,6 +25,38 @@ impl MigrationTrait for Migration {
                             .not_null(),
                     )
                     .col(ColumnDef::new(JobInstance::CommitSha).text())
+                    .col(
+                        ColumnDef::new(JobInstance::Status)
+                            .custom("job_status")
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(JobInstance::TriggeredBy)
+                            .custom("job_trigger")
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(JobInstance::CreatedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(JobInstance::StartedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(JobInstance::FinishedAt)
+                            .timestamp_with_time_zone()
+                            .not_null(),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .from(JobInstance::Table, JobInstance::JobDefinationId)
+                            .to(JobDefination::Table, JobDefination::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
                     .to_owned(),
             )
             .await

@@ -8,6 +8,8 @@ use migrations::{
     m0004_create_job_status_enum,
 };
 
+use crate::migrations::m0005_create_job_instances;
+
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -18,6 +20,7 @@ impl MigratorTrait for Migrator {
             Box::new(m0002_create_job_step::Migration),
             Box::new(m0003_create_job_trigger_enum::Migration),
             Box::new(m0004_create_job_status_enum::Migration),
+            Box::new(m0005_create_job_instances::Migration),
         ]
     }
 }
