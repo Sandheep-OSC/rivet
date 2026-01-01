@@ -5,7 +5,7 @@ pub mod migrations;
 
 use migrations::m0001_create_job_defination;
 use migrations::m0002_create_job_step;
-use migrations::m0003_create_job_trigger_and_job_status_enums;
+use migrations::m0003_create_job_trigger;
 
 pub struct Migrator;
 
@@ -15,7 +15,7 @@ impl MigratorTrait for Migrator {
         vec![
             Box::new(m0001_create_job_defination::Migration),
             Box::new(m0002_create_job_step::Migration),
-            Box::new(m0003_create_job_trigger_and_job_status_enums::Migration),
+            Box::new(m0003_create_job_trigger::Migration),
         ]
     }
 }

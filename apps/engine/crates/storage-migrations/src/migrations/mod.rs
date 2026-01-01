@@ -1,3 +1,3 @@
 pub mod m0001_create_job_defination;
 pub mod m0002_create_job_step;
-pub mod m0003_create_job_trigger_and_job_status_enums;
+pub mod m0003_create_job_trigger;
