@@ -2328,6 +2328,7 @@ dependencies = [
  "engine-core",
  "sea-orm",
  "sea-orm-migration",
+ "storage",
  "tokio",
 ]
 

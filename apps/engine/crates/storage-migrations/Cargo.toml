@@ -11,3 +11,4 @@ sea-orm = { version = "1.1.19", features = [
   "runtime-tokio-native-tls",
 ] }
 engine-core = { path = "../engine-core" }
+storage = { path = "../storage" }
