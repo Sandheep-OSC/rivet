@@ -3,3 +3,4 @@ pub mod m0002_create_job_step;
 pub mod m0003_create_job_trigger_enum;
 pub mod m0004_create_job_status_enum;
 pub mod m0005_create_job_instances;
+pub mod m0006_create_step_logs;

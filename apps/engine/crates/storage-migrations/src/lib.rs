@@ -8,7 +8,7 @@ use migrations::{
     m0004_create_job_status_enum,
 };
 
-use crate::migrations::m0005_create_job_instances;
+use crate::migrations::{m0005_create_job_instances, m0006_create_step_logs};
 
 pub struct Migrator;
 
@@ -21,6 +21,7 @@ impl MigratorTrait for Migrator {
             Box::new(m0003_create_job_trigger_enum::Migration),
             Box::new(m0004_create_job_status_enum::Migration),
             Box::new(m0005_create_job_instances::Migration),
+            Box::new(m0006_create_step_logs::Migration),
         ]
     }
 }
