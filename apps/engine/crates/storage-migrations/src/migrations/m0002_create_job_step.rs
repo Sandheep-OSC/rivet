@@ -18,7 +18,7 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(JobStep::StepOrder)
                             .integer()
                             .not_null()
-                            .default(Expr::value(2)),
+                            .default(Expr::value(0)),
                     )
                     .col(ColumnDef::new(JobStep::Name).text().not_null())
                     .col(ColumnDef::new(JobStep::Command).string().not_null())
