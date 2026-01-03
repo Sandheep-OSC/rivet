@@ -5,3 +5,4 @@ pub mod m0004_create_job_status_enum;
 pub mod m0005_create_job_instances;
 pub mod m0006_create_step_logs;
 pub mod m0007_remove_steps_from_job_definitions;
+pub mod m0008_made_finished_at_optional;

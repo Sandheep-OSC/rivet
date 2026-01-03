@@ -10,6 +10,7 @@ use migrations::{
 
 use crate::migrations::{
     m0005_create_job_instances, m0006_create_step_logs, m0007_remove_steps_from_job_definitions,
+    m0008_made_finished_at_optional,
 };
 
 pub struct Migrator;
@@ -25,6 +26,7 @@ impl MigratorTrait for Migrator {
             Box::new(m0005_create_job_instances::Migration),
             Box::new(m0006_create_step_logs::Migration),
             Box::new(m0007_remove_steps_from_job_definitions::Migration),
+            Box::new(m0008_made_finished_at_optional::Migration),
         ]
     }
 }
