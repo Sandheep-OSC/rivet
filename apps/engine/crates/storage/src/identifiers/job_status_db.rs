@@ -1,7 +1,8 @@
 use engine_core::types::job_status::JobStatus;
 use sea_orm::{DeriveActiveEnum, DeriveIden, EnumIter};
+use serde::Serialize;
 
-#[derive(Debug, Clone, PartialEq, Eq, DeriveActiveEnum, EnumIter, DeriveIden)]
+#[derive(Debug, Clone, PartialEq, Eq, DeriveActiveEnum, EnumIter, DeriveIden, Serialize)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "job_instance")]
 pub enum JobStatusDb {
     #[sea_orm(string_value = "pending")]

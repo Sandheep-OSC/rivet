@@ -1,4 +1,5 @@
 use sea_orm::prelude::*;
+use serde::Serialize;
 
 use crate::identifiers::{job_status_db::JobStatusDb, job_trigger_db::JobTriggerDb};
 
@@ -16,7 +17,7 @@ pub struct Model {
     pub finished_at: Option<DateTimeWithTimeZone>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveRelation)]
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveRelation, Serialize)]
 pub enum Relation {
     #[sea_orm(
         belongs_to = "super::job_definition::Entity",

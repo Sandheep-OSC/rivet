@@ -1,8 +1,9 @@
 use sea_orm::prelude::*;
+use serde::Serialize;
 
 use crate::identifiers::job_status_db::JobStatusDb;
 
-#[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
+#[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel, Serialize)]
 #[sea_orm(table_name = "step_logs")]
 pub struct Model {
     #[sea_orm(primary_key)]
