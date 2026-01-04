@@ -1,4 +1,5 @@
 use sea_orm::prelude::*;
+use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
 #[sea_orm(table_name = "job_step")]
@@ -16,7 +17,7 @@ pub struct Model {
     pub created_at: DateTimeWithTimeZone,
 }
 
-#[derive(Clone, Debug, EnumIter, DeriveRelation, PartialEq, Eq)]
+#[derive(Clone, Debug, EnumIter, DeriveRelation, PartialEq, Eq, Serialize)]
 pub enum Relation {
     #[sea_orm(
         belongs_to = "super::job_definition::Entity",
