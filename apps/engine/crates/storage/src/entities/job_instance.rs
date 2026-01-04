@@ -3,7 +3,7 @@ use serde::Serialize;
 
 use crate::identifiers::{job_status_db::JobStatusDb, job_trigger_db::JobTriggerDb};
 
-#[derive(Debug, Clone, PartialEq, Eq, DeriveEntityModel)]
+#[derive(Debug, Clone, PartialEq, Eq, DeriveEntityModel, Serialize)]
 #[sea_orm(table_name = "job_instance")]
 pub struct Model {
     #[sea_orm(primary_key)]

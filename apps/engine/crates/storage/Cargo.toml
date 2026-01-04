@@ -24,3 +24,4 @@ tracing-subscriber = { version = "0.3", features = [
 ] } # for setting up the subscriber (which defines the output format)
 chrono = "0.4" # for handling timestamps
 engine-core = { path = "../engine-core" }
+uuid = { version = "*", features = ['v4'] }

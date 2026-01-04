@@ -16,9 +16,9 @@ impl MigrationTrait for Migration {
                     Type::create()
                         .as_enum("job_trigger")
                         .values([
-                            JobTriggerDb::Webhook,
-                            JobTriggerDb::Manual,
-                            JobTriggerDb::Cron,
+                            JobTriggerDb::WEBHOOK,
+                            JobTriggerDb::MANUAL,
+                            JobTriggerDb::CRON,
                         ])
                         .to_owned(),
                 )

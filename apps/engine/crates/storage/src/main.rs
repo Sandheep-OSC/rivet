@@ -1,5 +1,3 @@
-mod routes;
-
 use dotenvy::dotenv;
 use storage::setup::{app::run_server, config::Config, db::init_db, logging::init_logging};
 use tracing::info;

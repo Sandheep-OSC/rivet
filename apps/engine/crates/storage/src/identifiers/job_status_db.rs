@@ -3,7 +3,7 @@ use sea_orm::{DeriveActiveEnum, DeriveIden, EnumIter};
 use serde::Serialize;
 
 #[derive(Debug, Clone, PartialEq, Eq, DeriveActiveEnum, EnumIter, DeriveIden, Serialize)]
-#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "job_instance")]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "job_status")]
 pub enum JobStatusDb {
     #[sea_orm(string_value = "pending")]
     Pending,
