@@ -1,4 +1,4 @@
-use actix_web::{HttpResponse, Responder, get, web};
+use actix_web::{HttpResponse, Responder, get, post, web};
 use chrono::Utc;
 use sea_orm::ActiveValue::Set;
 use uuid::Uuid;
@@ -15,7 +15,7 @@ pub async fn health() -> impl Responder {
     HttpResponse::Ok().json("ok")
 }
 
-#[get("/test")]
+#[post("/test")]
 pub async fn test_job_instance(state: web::Data<AppState>) -> impl Responder {
     let job_instance_repo = JobInstanceRepository::new(&state.db);
     let now = Utc::now().into();
@@ -37,4 +37,24 @@ pub async fn test_job_instance(state: web::Data<AppState>) -> impl Responder {
         Ok(model) => HttpResponse::Ok().json(model),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
+}
+
+#[post("/mark-started")]
+async fn mark_job_as_started(state: web::Data<AppState>) -> impl Responder {
+    HttpResponse::Ok().json("sfvnjd")
+}
+
+#[post("/update-job-status")]
+async fn update_job_instance_status(state: web::Data<AppState>) -> impl Responder {
+    HttpResponse::Ok().json("vfv")
+}
+
+#[post("/mark-finished")]
+async fn mark_job_as_finished() -> impl Responder {
+    HttpResponse::Ok().json("fvn")
+}
+
+#[get("get_by_id")]
+async fn get_instance_by_id() -> impl Responder {
+    HttpResponse::Ok().json("lvmjf n")
 }
