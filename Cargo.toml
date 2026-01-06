@@ -1,0 +1,18 @@
+[workspace]
+resolver = "3"
+members = [
+  "apps/control-plane",
+  "apps/runner",
+  "packages/engine",
+  "packages/storage",
+]
+
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+dbg_macro = "deny"
+print_stdout = "deny"
+print_stderr = "deny"

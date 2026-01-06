@@ -1,0 +1,18 @@
+# Minimum Supported Rust Version
+msrv = "1.75.0"
+
+# Allow large enums before Clippy complains
+enum-variant-size-threshold = 512
+
+# Allow moderately complex functions
+cognitive-complexity-threshold = 30
+
+# Allow larger error types (common in infra code)
+large-error-threshold = 128
+
+# Naming & ergonomics
+single-char-binding-names-threshold = 3
+type-complexity-threshold = 250
+
+# Safety defaults
+avoid-breaking-exported-api = false

@@ -1,0 +1,11 @@
+# JS
+node_modules/
+dist/
+
+# Rust
+target/
+
+# OS
+.DS_Store
+
+.env
