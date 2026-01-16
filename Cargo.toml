@@ -5,6 +5,7 @@ members = [
   "apps/runner",
   "packages/engine",
   "packages/storage",
+  "packages/contracts/workflow",
 ]
 
 

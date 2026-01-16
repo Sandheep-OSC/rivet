@@ -1,0 +1,7 @@
+# Project: MISE_EXPERIMENTAL=1;
+
+experimental_monorepo_root = true
+
+[tools]
+node = { version = "latest", postinstall = "corepack enable" }
+python = "latest"

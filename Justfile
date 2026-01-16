@@ -1,258 +1,222 @@
 set dotenv-load := true
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
-# ---------------------
-# Global variables
-# ---------------------
+# ==================================================
+# Configuration
+# ==================================================
 
-# Rust crate that generates TS types
 RUST_BINDINGS_CRATE := "packages/contracts-rust"
+GENERATED_TS_DIR    := "packages/dummy-lib/src"
 
-# Directory to store generated TS types
-GENERATED_TS_DIR := "packages/dummy-lib/src"
+# ==================================================
+# Default / Help
+# ==================================================
 
 default:
     just --list
 
-# ------------------------
+# ==================================================
+# Setup / Install
+# ==================================================
+
+install:
+    just js-install
+
+js-install:
+    pnpm install
+
+js-install-app app:
+    pnpm --filter {{app}} install
+
+# ==================================================
 # Formatting
-# ------------------------
+# ==================================================
 
 format:
     just format-rust
-    just format-ts
+    just format-js
 
 format-rust:
     cargo fmt --all
 
-format-ts:
+format-js:
     pnpm biome format . --write
 
-# ------------------------
+# ==================================================
 # Linting
-# ------------------------
+# ==================================================
 
 lint:
     just lint-rust
-    just lint-ts
+    just lint-js
 
 lint-rust:
     cargo clippy --all-targets --all-features -- -D warnings
 
-lint-ts:
+lint-js:
     pnpm biome lint .
 
-# ------------------------
-# Checks (no mutation)
-# ------------------------
+# ==================================================
+# Static Checks (no mutation)
+# ==================================================
 
 check:
     just check-rust
-    just check-ts
+    just check-js
 
 check-rust:
     cargo check --all-targets --all-features
 
-check-ts:
+check-js:
     pnpm biome check .
 
-# ------------------------
-# CI Entry
-# ------------------------
+# ==================================================
+# CI
+# ==================================================
 
 ci:
     just format
     just lint
     just check
 
+# ==================================================
+# Build / Test (Combined)
+# ==================================================
 
-# ---------------------
-# JS
-# ---------------------
+build:
+    just build-js
+    just build-rust
 
-js-install:
-    pnpm install
+test:
+    just test-js
+    just test-rust
 
-# Install packages in a specific app
-js-install-app app:
-    pnpm --filter {{app}} install
+clean:
+    rm -rf node_modules
+    cargo clean
 
-js-build:
+# ==================================================
+# JavaScript / TypeScript
+# ==================================================
+
+build-js:
     pnpm run build --workspaces
 
-js-test:
+test-js:
     pnpm test --workspaces
 
-
-# Run a specific JS project
-js-run app:
+run-js app:
     pnpm --filter {{app}} run dev
 
-# Run multiple specific apps (space-separated)
-js-run-apps apps:
+run-js-multi apps:
     #!/usr/bin/env bash
     for app in {{apps}}; do
         pnpm --filter "$$app" run dev &
     done
     wait
 
-# Create a new JS app
-js-create-app name dir="apps":
+create-js-app name dir="apps":
     #!/usr/bin/env bash
     set -euo pipefail
 
     DIR="{{dir}}"
-
-    # Strip optional "dir=" prefix
-    if [[ "$DIR" == dir=* ]]; then
-        DIR="${DIR#dir=}"
-    fi
+    [[ "$DIR" == dir=* ]] && DIR="${DIR#dir=}"
 
     case "$DIR" in
-        apps|apps/*|packages|packages/*)
-            ;;
+        apps|apps/*|packages|packages/*) ;;
         *)
             echo "Error: Directory must start with 'apps' or 'packages'"
-            echo "Received: '$DIR'"
             exit 1
             ;;
     esac
 
     APP_DIR="$DIR/{{name}}"
-
-    if [ -d "$APP_DIR" ]; then
-        echo "Error: App '{{name}}' already exists in $DIR!"
-        exit 1
-    fi
+    [ -d "$APP_DIR" ] && echo "App already exists: $APP_DIR" && exit 1
 
     mkdir -p "$DIR"
     cd "$DIR"
     pnpm create vite {{name}}
 
-# ---------------------
+# ==================================================
 # Rust
-# ---------------------
+# ==================================================
 
-rust-run-migration:
-  cargo run -p storage-migrations
-
-rust-build:
+build-rust:
     cargo build
 
-rust-test:
-    cargo test
+test-rust *ARGS:
+    cargo test {{ARGS}}
 
-rust-run app:
+run-rust app:
     cargo run -p {{app}}
 
-# Add a dependency to a specific Rust crate
-rust-add-dependency crate package *flags:
+run-rust-migration:
+    cargo run -p storage-migrations
+
+add-rust-dep crate package *flags:
     cargo add --package {{crate}} {{package}} {{flags}}
 
-# Add a dev dependency to a specific Rust crate
-rust-add-dev-dependency crate package *flags:
+add-rust-dev-dep crate package *flags:
     cargo add --package {{crate}} --dev {{package}} {{flags}}
 
-# Create a new Rust app
-rust-create-app name dir="packages":
+create-rust-app name dir="packages":
     #!/usr/bin/env bash
     set -euo pipefail
 
     DIR="{{dir}}"
-
-    # Strip optional "dir=" prefix
-    if [[ "$DIR" == dir=* ]]; then
-        DIR="${DIR#dir=}"
-    fi
+    [[ "$DIR" == dir=* ]] && DIR="${DIR#dir=}"
 
     case "$DIR" in
-        apps|apps/*|packages|packages/*)
-            ;;
+        apps|apps/*|packages|packages/*) ;;
         *)
             echo "Error: Directory must start with 'apps' or 'packages'"
-            echo "Received: '$DIR'"
             exit 1
             ;;
     esac
 
     APP_DIR="$DIR/{{name}}"
-    echo "Creating Rust crate at: $APP_DIR"
+    [ -d "$APP_DIR" ] && echo "Crate already exists: $APP_DIR" && exit 1
 
-    if [ -d "$APP_DIR" ]; then
-        echo "Error: App '{{name}}' already exists at $APP_DIR"
-        exit 1
-    fi
-
-    mkdir -p "$DIR"
     cargo new "$APP_DIR"
 
     if ! grep -q "\"$APP_DIR\"" Cargo.toml; then
         sed -i.bak "/members = \[/a\\
         \"$APP_DIR\"," Cargo.toml
-        echo "Added $APP_DIR to workspace members in Cargo.toml"
-    else
-        echo "$APP_DIR already exists in workspace members"
+        echo "Added $APP_DIR to workspace"
     fi
 
-# ---------------------
-# Combined
-# ---------------------
+# ==================================================
+# Rust → TypeScript Bindings (ts-rs)
+# ==================================================
 
-build:
-    just js-build
-    just rust-build
-
-test:
-    just js-test
-    just rust-test
-
-clean:
-    rm -rf node_modules
-    cargo clean
-
-
-# Generate TS types from Rust crates using ts-rs
-# ---------------------
-# TS-RS / TypeScript bindings
-# ---------------------
-
-rust-generate-types:
+generate-types:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    echo "Generating TS types from {{RUST_BINDINGS_CRATE}}..."
+    echo "Generating TS bindings from {{RUST_BINDINGS_CRATE}}..."
     cargo test -p contracts-rust export_bindings
 
-    echo "Clearing old TS types in {{GENERATED_TS_DIR}}..."
+    echo "Refreshing {{GENERATED_TS_DIR}}..."
     rm -rf "{{GENERATED_TS_DIR}}"/*
     mkdir -p "{{GENERATED_TS_DIR}}"
 
-    echo "Copying newly generated TS types..."
     cp -r "{{RUST_BINDINGS_CRATE}}/bindings/"* "{{GENERATED_TS_DIR}}/"
+    echo "TypeScript bindings updated."
 
-    echo "TS types generated and copied successfully."
-
-# Build JS projects after generating types
-js-build-with-types: rust-generate-types
-    just js-build
-
-# Test JS projects after generating types
-js-test-with-types: rust-generate-types
-    just js-test
-
-# Full workflow: generate types, build Rust + JS
-build-all: rust-generate-types
-    just build
-
-# Full workflow: generate types, test Rust + JS
-test-all: rust-generate-types
-    just test
-
-# Optional: watch Rust crate for changes and regenerate types automatically
-rust-watch-types:
+watch-types:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    echo "Watching {{RUST_BINDINGS_CRATE}}/src for changes..."
-    cargo watch -w "{{RUST_BINDINGS_CRATE}}/src" -x "test -p contracts-rust export_bindings" \
-        -s "rm -rf {{GENERATED_TS_DIR}}/* && cp -r {{RUST_BINDINGS_CRATE}}/bindings/* {{GENERATED_TS_DIR}}/ && echo 'TS types updated!'"
+    cargo watch \
+        -w "{{RUST_BINDINGS_CRATE}}/src" \
+        -x "test -p contracts-rust export_bindings" \
+        -s "rm -rf {{GENERATED_TS_DIR}}/* && cp -r {{RUST_BINDINGS_CRATE}}/bindings/* {{GENERATED_TS_DIR}}/"
+
+# ==================================================
+# Workflows
+# ==================================================
+
+build-with-types: generate-types build
+test-with-types:  generate-types test
+build-all:        generate-types build
+test-all:         generate-types test
