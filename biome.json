@@ -49,7 +49,9 @@
       "!!**/build",
       "!!**/.rivet",
       "!!**/coverage",
-      "!!**/target"
+      "!!**/target",
+      "!!**/.svelte-kit",
+      "!!**/worker-configuration.d.ts"
     ]
   }
 }

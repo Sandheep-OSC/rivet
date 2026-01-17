@@ -1,4 +1,4 @@
-pub mod setup;
+pub mod middleware;
 pub mod routes;
 pub mod services;
-pub mod middleware;
+pub mod setup;

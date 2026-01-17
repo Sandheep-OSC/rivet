@@ -3,7 +3,7 @@
  */
 
 import axios, { type AxiosInstance } from 'axios';
-import { envConfig } from '../config/env';
+import { envConfig } from '@/config/env';
 
 export const createAxiosInstance = (): AxiosInstance => {
   const instance = axios.create({

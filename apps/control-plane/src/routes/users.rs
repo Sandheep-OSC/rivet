@@ -29,7 +29,7 @@ pub async fn get_me(
         .ok_or_else(|| crate::setup::error::Error::Database("DB not available".to_string()))?;
     // Placeholder: assume user_id from auth
     let user_id = uuid::Uuid::new_v4(); // Placeholder
-    let user = crate::services::users::get_user_by_id(user_id, &**db).await?;
+    let user = crate::services::users::get_user_by_id(user_id, db).await?;
     Ok(HttpResponse::Ok().json(UserResponse {
         id: user.id.to_string(),
         email: user.email,

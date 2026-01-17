@@ -44,7 +44,7 @@ format:
     just format-js
 
 format-rust:
-    cargo fmt --all
+    cargo fmt --all 2>/dev/null
 
 format-js:
     pnpm biome format . --write
@@ -107,10 +107,10 @@ clean:
 # ==================================================
 
 build-js:
-    pnpm run build --workspaces
+    pnpm --recursive run build
 
 test-js:
-    pnpm test --workspaces
+    pnpm --recursive run test
 
 run-js app:
     pnpm --filter {{app}} run dev

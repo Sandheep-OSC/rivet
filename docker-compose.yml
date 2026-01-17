@@ -43,7 +43,19 @@ services:
       - localstack_data_v2:/var/lib/localstack
       # - /var/run/docker.sock:/var/run/docker.sock
 
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
+    volumes:
+      - meili_data_rivet:/meili_data
+    restart: unless-stopped
+
 volumes:
   postgres_data_v2:
   pgadmin_data_v2:
   localstack_data_v2:
+  meili_data_rivet:

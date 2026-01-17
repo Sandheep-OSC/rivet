@@ -32,7 +32,7 @@ pub async fn login(
         .db
         .as_ref()
         .ok_or_else(|| crate::setup::error::Error::Database("DB not available".to_string()))?;
-    let token = crate::services::auth::login(&req.email, &req.password, &**db).await?;
+    let token = crate::services::auth::login(&req.email, &req.password, db).await?;
     Ok(HttpResponse::Ok().json(LoginResponse { token }))
 }
 
@@ -67,7 +67,7 @@ pub async fn register(
         .db
         .as_ref()
         .ok_or_else(|| crate::setup::error::Error::Database("DB not available".to_string()))?;
-    crate::services::auth::register(&req.email, &req.password, &req.name, &**db).await?;
+    crate::services::auth::register(&req.email, &req.password, &req.name, db).await?;
     Ok(HttpResponse::Created().json(RegisterResponse {
         message: "User registered successfully".to_string(),
     }))
