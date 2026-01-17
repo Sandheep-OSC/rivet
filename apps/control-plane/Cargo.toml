@@ -4,3 +4,30 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+actix-web = "*"
+actix-cors = "*"
+tracing-actix-web = "*"
+futures-util = "*"
+jsonwebtoken = { version = "*", features = ["rust_crypto"] }
+tracing-subscriber = { version = "*", features = ["env-filter", "fmt", "json"] }
+uuid = { version = "*", features = ["v4", "serde"] }
+config = "*"
+anyhow = "*"
+validator = { version = "*", features = ["derive"] }
+bcrypt = "*"
+cookie = "*"
+utoipa = "4.2.3"
+reqwest = { version = "*", features = ["json", "native-tls"] }
+once_cell = "*"
+lazy_static = "*"
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
+thiserror = "*"
+tracing = "*"
+tokio = { version = "*", features = ["full"] }
+storage = { path = "../../packages/storage" }
+
+[dev-dependencies]
+rstest = "*"
+wiremock = "*"
+testcontainers = "*"
