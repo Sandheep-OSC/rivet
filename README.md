@@ -172,6 +172,25 @@ rivet/
 └── Cargo.toml             # Rust workspace configuration
 ```
 
+### How to Add a New Component
+
+#### Adding a New Rust Service
+
+1. Create a new directory under `apps/` (for executables) or `packages/` (for libraries).
+2. Add a `Cargo.toml` file with appropriate dependencies.
+3. Update the root `Cargo.toml` to include the new member in the `[workspace]` `members` array.
+4. Implement your service logic.
+5. Add tests and documentation as needed.
+
+#### Adding a New JS/TS Package
+
+1. Create a new directory under `packages/`.
+2. Create a `package.json` with name, version, scripts, and dependencies.
+3. Update `pnpm-workspace.yaml` to include the new package path.
+4. Add a `tsconfig.json` extending the root `tsconfig.base.json`.
+5. Implement your package logic.
+6. Add tests and linting as needed.
+
 ### Code Quality
 
 - **Rust**: Uses 2024 edition with strict Clippy rules (no unwraps, no panics)

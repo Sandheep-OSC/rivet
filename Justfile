@@ -25,6 +25,13 @@ install:
 js-install:
     pnpm install
 
+setup:
+    just install
+    docker-compose up -d
+    sleep 10
+    just rust-run-migration
+    echo "Setup complete. You can now run 'just run-rust control-plane' to start the control plane."
+
 js-install-app app:
     pnpm --filter {{app}} install
 
