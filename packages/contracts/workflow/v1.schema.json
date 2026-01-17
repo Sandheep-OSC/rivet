@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rivet.dev/schemas/workflow.schema.json",
+  "title": "Rivet Workflow v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "steps"],
+
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "steps": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/step"
+      }
+    }
+  },
+
+  "$defs": {
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run"],
+
+      "properties": {
+        "run": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+
+        "depends_on": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+
+        "retry": {
+          "$ref": "#/$defs/retry"
+        },
+
+        "approval": {
+          "$ref": "#/$defs/approval"
+        },
+
+        "rollback": {
+          "$ref": "#/$defs/rollback"
+        }
+      }
+    },
+
+    "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_attempts", "on"],
+
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1
+        },
+
+        "on": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["command_failure", "timeout", "infra_error"]
+          }
+        }
+      }
+    },
+
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "reviewers"],
+
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+
+        "reviewers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run"],
+
+      "properties": {
+        "run": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

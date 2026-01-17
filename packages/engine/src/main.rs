@@ -1,3 +1,6 @@
+use engine::workflow::loader::read_workflow_toml;
+
 fn main() {
-    println!("Hello, world!");
+    let abc = read_workflow_toml("abc=/\"qjd / \"\n");
+    println!("{:?}", abc);
 }

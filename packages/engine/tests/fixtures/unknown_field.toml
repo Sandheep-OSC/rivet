@@ -1,0 +1,25 @@
+name = "build-test-deploy"
+version = 1
+extra_field = "oops"       # not allowed by schema
+
+[steps.build]
+run = ["npm install", "npm run build"]
+
+[steps.test]
+depends_on = ["build"]
+run = ["npm test"]
+
+[steps.deploy]
+depends_on = ["test"]
+run = ["./deploy.sh"]
+
+[steps.deploy.retry]
+max_attempts = 3
+on = ["infra_error", "timeout"]
+
+[steps.deploy.approval]
+required = true
+reviewers = ["devops"]
+
+[steps.deploy.rollback]
+run = ["./rollback.sh"]

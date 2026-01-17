@@ -1,0 +1,24 @@
+name = "build-test-deploy"
+version = 1
+
+[steps.build]
+run = "npm install" # should be an array, not string
+
+[steps.test]
+depends_on = ["build"]
+run = ["npm test"]
+
+[steps.deploy]
+depends_on = ["test"]
+run = ["./deploy.sh"]
+
+[steps.deploy.retry]
+max_attempts = 3
+on = ["infra_error", "timeout"]
+
+[steps.deploy.approval]
+required = true
+reviewers = ["devops"]
+
+[steps.deploy.rollback]
+run = ["./rollback.sh"]

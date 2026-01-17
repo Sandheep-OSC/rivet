@@ -1,0 +1,24 @@
+name = "build-test-deploy"
+version = 1
+
+[steps.build]
+run = ["npm install", "npm run build"]
+
+[steps.test]
+depends_on = ["build"]
+run = ["npm test"]
+
+[steps.deploy]
+depends_on = ["test"]
+run = ["./deploy.sh"]
+
+[steps.deploy.retry]
+max_attempts = 0       # must be >= 1
+on = ["network_error"] # not one of the allowed enum values
+
+[steps.deploy.approval]
+required = true
+reviewers = ["devops"]
+
+[steps.deploy.rollback]
+run = ["./rollback.sh"]

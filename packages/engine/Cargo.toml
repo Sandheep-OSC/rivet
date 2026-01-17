@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+workflow-contracts = { path = "../contracts/workflow" }
+serde = { version = "*", features = ['derive'] }
+toml = { version = "*" }
+jsonschema = { version = "*" }
+serde_json = { version = "*" }
