@@ -41,8 +41,12 @@ pub fn validate_workflow_json(toml_value: &str) -> Result<RawWorkflow, WorkflowE
     let schema: Value = serde_json::from_str(WORKFLOW_SCHEMA_V1)
         .map_err(|err| WorkflowError::TomlParseError(format!("Invalid schema: {}", err)))?;
 
-    let workflow: RawWorkflow =
-        toml::from_str(toml_value).map_err(|err| WorkflowError::TomlParseError(err.to_string()))?;
+    let workflow: RawWorkflow = toml::from_str(toml_value).map_err(|err| {
+        WorkflowError::TomlParseError(format!(
+            "Failed to convert schema to workflow stuct {}",
+            err
+        ))
+    })?;
 
     let instance: Value = serde_json::to_value(&workflow).map_err(|err| {
         WorkflowError::ValidationError(format!("Failed to convert workflow: {}", err))
